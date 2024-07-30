@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "beaconwaypoints",
+	"version": "${version}",
+	"name": "Beacon Waypoints",
+	"description": "A simple server-sided mod (works on singleplayer when on client) to turn beacon into waypoints which you can teleport to.",
+	"authors": ["Adrien5902"],
+	"contact": {
+		"sources": "https://github.com/Adrien5902/beaconwaypoints"
+	},
+	"license": "MIT",
+	"icon": "assets/beaconwaypoints/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["net.ddns.adrien5902.beaconwaypoints.BeaconWaypointsMod"]
+	},
+	"mixins": ["beaconwaypoints.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

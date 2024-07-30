@@ -1,0 +1,9 @@
+{
+	"required": true,
+	"package": "net.ddns.adrien5902.beaconwaypoints.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": ["BeaconUpdateLevelInvoker"],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
