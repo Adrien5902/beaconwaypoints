@@ -5,10 +5,6 @@ A simple server-sided mod (works on singleplayer when on client) to turn beacon 
 
 Required mods : [Fabric API](https://modrinth.com/mod/fabric-api)
 
-| Mod Version | Supported Minecraft Version |
-| ----------- | --------------------------- |
-| 1.0.0       | 1.21                        |
-
 ## How to use
 
 Right click with a renamed pearl on an activated beacon to enable teleportation to it.
