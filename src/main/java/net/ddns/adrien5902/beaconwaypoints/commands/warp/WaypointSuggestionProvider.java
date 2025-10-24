@@ -9,7 +9,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
 import net.ddns.adrien5902.beaconwaypoints.Waypoint;
-import net.ddns.adrien5902.beaconwaypoints.WaypointsManager;
+import net.ddns.adrien5902.beaconwaypoints.WaypointsManagerWithWorld;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.ArrayList;
@@ -20,19 +20,19 @@ public class WaypointSuggestionProvider implements SuggestionProvider<ServerComm
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context,
             SuggestionsBuilder builder) throws CommandSyntaxException {
 
-        ArrayList<WaypointsManager> managers = WaypointsManager.readGlobal(context.getSource().getServer());
+        ArrayList<WaypointsManagerWithWorld> withWorlds = WaypointsManagerWithWorld
+                .readGlobal(context.getSource().getServer());
 
-        for (WaypointsManager manager : managers) {
-            for (Waypoint waypoint : manager.waypoints) {
+        for (WaypointsManagerWithWorld withWorld : withWorlds) {
+            for (Waypoint waypoint : withWorld.manager.waypoints) {
                 if (waypoint.name.matches("[A-Za-z0-9]+")) {
-                    builder.suggest(waypoint.name, waypoint.getTooltip(manager.world));
+                    builder.suggest(waypoint.name, waypoint.getTooltip(withWorld.world));
                 } else {
-                    builder.suggest('"' + waypoint.name + '"', waypoint.getTooltip(manager.world));
+                    builder.suggest('"' + waypoint.name + '"', waypoint.getTooltip(withWorld.world));
                 }
             }
         }
 
         return builder.buildFuture();
     }
-
 }

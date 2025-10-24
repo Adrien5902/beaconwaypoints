@@ -4,9 +4,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import net.ddns.adrien5902.beaconwaypoints.Waypoint;
-import net.ddns.adrien5902.beaconwaypoints.WaypointsManager;
+import net.ddns.adrien5902.beaconwaypoints.WaypointsManagerWithWorld;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.command.CommandManager;
@@ -28,7 +29,7 @@ public class WarpCommand {
                         try {
                             ServerCommandSource src = context.getSource();
 
-                            ArrayList<WaypointsManager> managers = WaypointsManager
+                            ArrayList<WaypointsManagerWithWorld> managers = WaypointsManagerWithWorld
                                     .readGlobal(src.getServer());
 
                             WarpCommandGui gui = new WarpCommandGui(src, managers);
@@ -47,14 +48,14 @@ public class WarpCommand {
 
                                         String waypoint_name = StringArgumentType.getString(context, "waypoint");
 
-                                        ArrayList<WaypointsManager> managers = WaypointsManager
+                                        ArrayList<WaypointsManagerWithWorld> withWorlds = WaypointsManagerWithWorld
                                                 .readGlobal(src.getServer());
 
                                         Waypoint found_waypoint = null;
                                         ServerWorld current_world = null;
-                                        outer: for (WaypointsManager manager : managers) {
-                                            for (Waypoint waypoint : manager.waypoints) {
-                                                current_world = manager.world;
+                                        outer: for (WaypointsManagerWithWorld withWorld : withWorlds) {
+                                            for (Waypoint waypoint : withWorld.manager.waypoints) {
+                                                current_world = withWorld.world;
                                                 if (waypoint_name.equals(waypoint.name)) {
                                                     found_waypoint = waypoint;
                                                     break outer;
@@ -63,7 +64,7 @@ public class WarpCommand {
                                         }
 
                                         if (found_waypoint == null) {
-                                            src.sendError(Text.literal("Waypoint introuvable"));
+                                            src.sendError(Text.literal("Can't find waypoint"));
                                             return 0;
                                         }
 
@@ -77,16 +78,15 @@ public class WarpCommand {
     public static void teleportTo(ServerCommandSource src, ServerWorld world, Waypoint waypoint) {
         Vec3d pos = waypoint.pos.toCenterPos();
 
-        src.getPlayer().teleport(world, pos.x, pos.y + 0.5, pos.z, 0,
-                0);
-
-        src.sendFeedback(
-                () -> Text.literal("Teleporting to " + waypoint.name + "..."), false);
+        src.getPlayer().teleport(world, pos.x, pos.y + 0.5, pos.z, Set.of(), 0, 0, false);
 
         world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ENTITY_PLAYER_TELEPORT,
                 SoundCategory.PLAYERS, 1, 1);
 
         world.spawnParticles(ParticleTypes.WITCH, pos.x, pos.y, pos.z, 50, 0, 0.5, 0,
                 2);
+
+        src.sendFeedback(
+                () -> Text.literal("Teleporting to " + waypoint.name + "..."), false);
     }
 }

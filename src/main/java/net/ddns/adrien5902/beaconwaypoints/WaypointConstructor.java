@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import java.util.List;
+import java.util.Optional;
 
 public class WaypointConstructor {
     public static void register() {
@@ -44,14 +45,14 @@ public class WaypointConstructor {
             // TODO: check for item renamed or not and so change waypoint's name if unamed
             Waypoint /* waypoint = null; */
             // if (name.getStyle().isItalic()) {
-            waypoint = new Waypoint(name.getString(), pos);
+            waypoint = new Waypoint(name.getString(), pos, Optional.empty());
             // } else {
             // waypoint = Waypoint.unamed(pos);
             // }
 
             if (WaypointsManager.fromWorld(serverWorld).waypoints.stream()
                     .anyMatch((w) -> w.pos.equals(pos))) {
-                player.sendMessage(Text.literal("This is already a waypoint"));
+                player.sendMessage(Text.literal("This is already a waypoint"), true);
                 return ActionResult.CONSUME;
             }
 
@@ -75,8 +76,8 @@ public class WaypointConstructor {
             serverWorld.playSound(null, x, y, z, SoundEvents.BLOCK_END_PORTAL_SPAWN,
                     SoundCategory.PLAYERS, 1, 1);
 
-            serverWorld.spawnParticles(ParticleTypes.DRAGON_BREATH, x, y, z, 150, 1, 1, 1,
-                    0.2);
+            serverWorld.spawnParticles(ParticleTypes.WITCH, x, y, z, 150, 1.0,
+                    1.0, 1.0, 0.2);
 
             return ActionResult.CONSUME;
         });

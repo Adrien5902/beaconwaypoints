@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.ddns.adrien5902.beaconwaypoints.Waypoint;
-import net.ddns.adrien5902.beaconwaypoints.WaypointsManager;
+import net.ddns.adrien5902.beaconwaypoints.WaypointsManagerWithWorld;
 
 public class WarpCommandGui {
     private ServerCommandSource src;
@@ -34,14 +34,14 @@ public class WarpCommandGui {
     private static final int MIDDLE_BOTTOM = PAGE_SIZE + 4;
     private static final int RIGHT_BOTTOM = PAGE_SIZE + 8;
 
-    public WarpCommandGui(ServerCommandSource src, ArrayList<WaypointsManager> waypoints_managers) {
+    public WarpCommandGui(ServerCommandSource src, ArrayList<WaypointsManagerWithWorld> withWorlds) {
         this.src = src;
         this.gui = new SimpleGui(ScreenHandlerType.GENERIC_9X3, src.getPlayer(), false);
         gui.setTitle(Text.literal("Beacon Waypoints"));
         gui.setAutoUpdate(true);
-        this.waypoints = waypoints_managers.stream().flatMap(
-                (manager) -> manager.waypoints.stream()
-                        .map((waypoint) -> new Pair<Waypoint, ServerWorld>(waypoint, manager.world)))
+        this.waypoints = withWorlds.stream().flatMap(
+                (withWorld) -> withWorld.manager.waypoints.stream()
+                        .map((waypoint) -> new Pair<Waypoint, ServerWorld>(waypoint, withWorld.world)))
                 .toList();
 
         this.max_page = Math.floorDiv(waypoints.size() == 0 ? 0 : waypoints.size() - 1, PAGE_SIZE);
@@ -102,7 +102,8 @@ public class WarpCommandGui {
         return getPage(page).stream().map((pair) -> {
             ItemStack stack = pair.getLeft().getGuiItemStack();
 
-            stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal(pair.getLeft().name));
+            stack.set(DataComponentTypes.CUSTOM_NAME,
+                    Text.literal(pair.getLeft().name).styled(style -> style.withItalic(false)));
 
             LoreComponent lore = new LoreComponent(Arrays.asList(pair.getLeft().getTooltip(pair.getRight())));
             stack.set(DataComponentTypes.LORE, lore);
