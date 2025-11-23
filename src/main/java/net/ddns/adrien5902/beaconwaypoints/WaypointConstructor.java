@@ -52,7 +52,7 @@ public class WaypointConstructor {
 
             if (WaypointsManager.fromWorld(serverWorld).waypoints.stream()
                     .anyMatch((w) -> w.pos.equals(pos))) {
-                player.sendMessage(Text.literal("This is already a waypoint"), true);
+                player.sendMessage(Text.translatable("beaconwaypoints.error.waypoint_already_set_up_here"), true);
                 return ActionResult.CONSUME;
             }
 

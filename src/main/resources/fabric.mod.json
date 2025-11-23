@@ -12,7 +12,10 @@
 	"icon": "assets/beaconwaypoints/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": ["net.ddns.adrien5902.beaconwaypoints.BeaconWaypointsMod"]
+		"main": ["net.ddns.adrien5902.beaconwaypoints.BeaconWaypointsMod"],
+    "fabric-datagen": [ 
+		"net.ddns.adrien5902.beaconwaypoints.datagen.BeaconWaypointsDataGenerator"
+    ]
 	},
 	"mixins": ["beaconwaypoints.mixins.json"],
 	"depends": {

@@ -31,7 +31,8 @@ public class WarpCommand {
                     .executes(context -> {
                         try {
                             ServerCommandSource src = context.getSource();
-                            ArrayList<WaypointsManagerWithWorld> managers = WaypointsManagerWithWorld.readGlobal(src.getServer());
+                            ArrayList<WaypointsManagerWithWorld> managers = WaypointsManagerWithWorld
+                                    .readGlobal(src.getServer());
                             WarpCommandGui gui = new WarpCommandGui(src, managers);
                             gui.open();
                         } catch (Exception e) {
@@ -47,7 +48,8 @@ public class WarpCommand {
                         ServerCommandSource src = context.getSource();
                         String waypoint_name_raw = StringArgumentType.getString(context, "waypoint");
                         String waypoint_name = stripQuotes(waypoint_name_raw);
-                        ArrayList<WaypointsManagerWithWorld> withWorlds = WaypointsManagerWithWorld.readGlobal(src.getServer());
+                        ArrayList<WaypointsManagerWithWorld> withWorlds = WaypointsManagerWithWorld
+                                .readGlobal(src.getServer());
                         Waypoint found_waypoint = null;
                         ServerWorld current_world = null;
                         WaypointsManager found_manager = null;
@@ -62,7 +64,7 @@ public class WarpCommand {
                             }
                         }
                         if (found_waypoint == null) {
-                            src.sendError(Text.literal("Can't find waypoint"));
+                            src.sendError(Text.translatable("beaconwaypoints.error.waypoint_not_found"));
                             return 0;
                         }
                         teleportTo(src, current_world, found_waypoint, found_manager);
@@ -77,7 +79,8 @@ public class WarpCommand {
                                 ServerCommandSource src = context.getSource();
                                 String waypoint_name_raw = StringArgumentType.getString(context, "waypoint");
                                 String waypoint_name = stripQuotes(waypoint_name_raw);
-                                ArrayList<WaypointsManagerWithWorld> withWorlds = WaypointsManagerWithWorld.readGlobal(src.getServer());
+                                ArrayList<WaypointsManagerWithWorld> withWorlds = WaypointsManagerWithWorld
+                                        .readGlobal(src.getServer());
                                 Waypoint found_waypoint = null;
                                 WaypointsManager found_manager = null;
                                 ServerWorld current_world = null;
@@ -92,7 +95,8 @@ public class WarpCommand {
                                     }
                                 }
                                 if (found_waypoint == null) {
-                                    src.sendError(Text.literal("Can't find waypoint to remove"));
+                                    src.sendError(Text
+                                            .translatable("beaconwaypoints.error.waypoint_removal_failed"));
                                     return 0;
                                 }
                                 final Vec3d beaconCenter = found_waypoint.pos.toCenterPos();
@@ -101,13 +105,17 @@ public class WarpCommand {
                                 boolean removed = found_manager.waypoints.removeIf(w -> w.pos.equals(targetPos));
                                 if (removed) {
                                     found_manager.markDirty();
-                                    src.sendFeedback(() -> Text.literal("Removed waypoint '" + removedName + "'."), false);
+                                    src.sendFeedback(
+                                            () -> Text.translatable("beaconwaypoints.success.waypoint_removed",
+                                                    removedName),
+                                            false);
                                     if (current_world != null) {
-                                        current_world.playSound(null, beaconCenter.x, beaconCenter.y, beaconCenter.z, SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.PLAYERS, 1, 1);
+                                        current_world.playSound(null, beaconCenter.x, beaconCenter.y, beaconCenter.z,
+                                                SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.PLAYERS, 1, 1);
                                     }
                                     return Command.SINGLE_SUCCESS;
                                 } else {
-                                    src.sendError(Text.literal("Failed to remove waypoint"));
+                                    src.sendError(Text.translatable("beaconwaypoints.error.waypoint_removal_failed"));
                                     return 0;
                                 }
                             }));
@@ -129,14 +137,15 @@ public class WarpCommand {
         return s;
     }
 
-    public static void teleportTo(ServerCommandSource src, ServerWorld world, Waypoint waypoint, WaypointsManager manager) {
+    public static void teleportTo(ServerCommandSource src, ServerWorld world, Waypoint waypoint,
+            WaypointsManager manager) {
         // Validate beacon still exists; if not remove waypoint and abort.
         if (!WaypointConstructor.isValidWaypoint(world, waypoint.pos)) {
             if (manager != null) {
                 manager.waypoints.removeIf(w -> w.pos.equals(waypoint.pos));
                 manager.markDirty();
             }
-            src.sendError(Text.literal("Beacon missing. Removed waypoint '" + waypoint.name + "'."));
+            src.sendError(Text.translatable("beaconwaypoints.error.waypoint_teleport_invalid", waypoint.name));
             return;
         }
 
@@ -151,6 +160,6 @@ public class WarpCommand {
                 2);
 
         src.sendFeedback(
-                () -> Text.literal("Teleporting to " + waypoint.name + "..."), false);
+                () -> Text.translatable("beaconwaypoints.success.teleporting_to", waypoint.name), false);
     }
 }

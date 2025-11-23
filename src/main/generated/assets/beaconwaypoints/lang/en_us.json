@@ -1,0 +1,10 @@
+{
+  "beaconwaypoints.error.waypoint_already_set_up_here": "This beacon is already a waypoint",
+  "beaconwaypoints.error.waypoint_not_found": "Can't find this waypoint",
+  "beaconwaypoints.error.waypoint_removal_failed": "Failed to remove waypoint",
+  "beaconwaypoints.error.waypoint_teleport_invalid": "Beacon missing. Removed waypoint \"%1$s\".",
+  "beaconwaypoints.gui.go_to_page": "Go to page: %1$s",
+  "beaconwaypoints.gui.on_page": "On page: %1$s",
+  "beaconwaypoints.success.teleporting_to": "Teleporting to \"%1$s\"...",
+  "beaconwaypoints.success.waypoint_removed": "Removed waypoint \"%1$s\""
+}

@@ -6,6 +6,12 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+fabricApi {
+	configureDataGeneration() {
+		client = true
+	}
+}
+
 base {
 	archivesName = project.archives_base_name
 }

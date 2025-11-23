@@ -64,7 +64,8 @@ public class WarpCommandGui {
 
         if (page > 0) {
             gui.setSlot(LEFT_BOTTOM,
-                    new GuiElementBuilder().setItem(Items.ARROW).setName(Text.literal("Go to page " + (page)))
+                    new GuiElementBuilder().setItem(Items.ARROW)
+                            .setName(Text.translatable("beaconwaypoints.gui.go_to_page", page))
                             .setCount(page)
                             .setCallback((int index, ClickType type, SlotActionType action) -> {
                                 if (page > 0) {
@@ -79,7 +80,8 @@ public class WarpCommandGui {
 
         if (page < max_page) {
             gui.setSlot(RIGHT_BOTTOM,
-                    new GuiElementBuilder().setItem(Items.ARROW).setName(Text.literal("Go to page " + (page + 2)))
+                    new GuiElementBuilder().setItem(Items.ARROW)
+                            .setName(Text.translatable("beaconwaypoints.gui.go_to_page", page + 2))
                             .setCount(page + 2)
                             .setCallback((int index, ClickType type, SlotActionType action) -> {
                                 if (page < max_page) {
@@ -93,7 +95,8 @@ public class WarpCommandGui {
         }
 
         gui.setSlot(MIDDLE_BOTTOM,
-                new GuiElementBuilder().setItem(Items.PAPER).setName(Text.literal("On page " + (page + 1)))
+                new GuiElementBuilder().setItem(Items.PAPER)
+                        .setName(Text.translatable("beaconwaypoints.gui.on_page", page + 1))
                         .setCount(page + 1)
                         .build());
     }
@@ -111,7 +114,8 @@ public class WarpCommandGui {
             return new GuiElement(stack, (int index, ClickType type, SlotActionType action) -> {
                 // Need manager for validity removal; re-fetch manager via world
                 WaypointsManagerWithWorld.fromWorld(pair.getRight()).manager.markDirty(); // ensure state loaded
-                WarpCommand.teleportTo(src, pair.getRight(), pair.getLeft(), WaypointsManagerWithWorld.fromWorld(pair.getRight()).manager);
+                WarpCommand.teleportTo(src, pair.getRight(), pair.getLeft(),
+                        WaypointsManagerWithWorld.fromWorld(pair.getRight()).manager);
                 gui.close();
             });
         }).toList();
