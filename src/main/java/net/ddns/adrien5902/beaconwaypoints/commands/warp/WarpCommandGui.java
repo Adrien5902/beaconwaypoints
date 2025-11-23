@@ -109,7 +109,9 @@ public class WarpCommandGui {
             stack.set(DataComponentTypes.LORE, lore);
 
             return new GuiElement(stack, (int index, ClickType type, SlotActionType action) -> {
-                WarpCommand.teleportTo(src, pair.getRight(), pair.getLeft());
+                // Need manager for validity removal; re-fetch manager via world
+                WaypointsManagerWithWorld.fromWorld(pair.getRight()).manager.markDirty(); // ensure state loaded
+                WarpCommand.teleportTo(src, pair.getRight(), pair.getLeft(), WaypointsManagerWithWorld.fromWorld(pair.getRight()).manager);
                 gui.close();
             });
         }).toList();
