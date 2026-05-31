@@ -1,16 +1,17 @@
 package net.ddns.adrien5902.beaconwaypoints;
 
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.server.world.ServerWorld;
 
-public class WaypointsManager extends PersistentState {
+public class WaypointsManager extends SavedData {
     private static final String WAYPOINTS = "waypoints";
     public static final Codec<WaypointsManager> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
@@ -20,8 +21,8 @@ public class WaypointsManager extends PersistentState {
                             .forGetter(waypointsManager -> waypointsManager.waypoints))
                     .apply(instance, WaypointsManager::new));
 
-    private static final PersistentStateType<WaypointsManager> type = new PersistentStateType<WaypointsManager>(
-            WAYPOINTS,
+    private static final SavedDataType<WaypointsManager> type = new SavedDataType<WaypointsManager>(
+            Identifier.fromNamespaceAndPath(BeaconWaypointsMod.MOD_NAMESPACE, WAYPOINTS),
             WaypointsManager::new,
             CODEC,
             null);
@@ -29,7 +30,7 @@ public class WaypointsManager extends PersistentState {
     public ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
 
     WaypointsManager() {
-        this.markDirty();
+        this.setDirty();
         this.waypoints = new ArrayList<>();
     }
 
@@ -37,7 +38,7 @@ public class WaypointsManager extends PersistentState {
         this.waypoints = new ArrayList<Waypoint>(waypoints);
     }
 
-    public static WaypointsManager fromWorld(ServerWorld world) {
-        return world.getPersistentStateManager().getOrCreate(type);
+    public static WaypointsManager fromLevel(ServerLevel world) {
+        return world.getDataStorage().computeIfAbsent(type);
     }
 }

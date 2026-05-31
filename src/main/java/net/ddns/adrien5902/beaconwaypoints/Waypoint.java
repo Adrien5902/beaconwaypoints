@@ -1,15 +1,13 @@
 package net.ddns.adrien5902.beaconwaypoints;
 
 import java.util.Optional;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
 public class Waypoint {
     public String name;
@@ -30,11 +28,12 @@ public class Waypoint {
         this.gui_item = gui_item;
     }
 
-    public Text getTooltip(World world) {
-        return Text
-                .literal(String.format("x: %d, y: %d, z: %d in %s", this.pos.getX(), this.pos.getY(), this.pos.getZ(),
-                        world.getRegistryKey().getValue()))
-                .styled(style -> style.withItalic(false));
+    public Component getTooltip(Level level) {
+        return Component
+                .literal(
+                        String.format("x: %d, y: %d, z: %d in %s", this.pos.getX(), this.pos.getY(), this.pos.getZ(),
+                                level.dimension().identifier().toShortString()))
+                .withStyle(style -> style.withItalic(false));
     }
 
     public ItemStack getGuiItemStack() {
