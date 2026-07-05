@@ -100,7 +100,7 @@ public class WarpCommand {
                                             .translatable("beaconwaypoints.error.waypoint_removal_failed"));
                                     return 0;
                                 }
-                                final Vec3 beaconCenter = found_waypoint.pos.getCenter();
+                                final Vec3 beaconCenter = new Vec3(found_waypoint.pos.getX() + 0.5, found_waypoint.pos.getY() + 0.5, found_waypoint.pos.getZ() + 0.5);
                                 final String removedName = found_waypoint.name;
                                 final BlockPos targetPos = found_waypoint.pos;
                                 boolean removed = found_manager.waypoints.removeIf(w -> w.pos.equals(targetPos));
@@ -151,7 +151,7 @@ public class WarpCommand {
             return;
         }
 
-        Vec3 pos = waypoint.pos.getCenter();
+        Vec3 pos = new Vec3(waypoint.pos.getX() + 0.5, waypoint.pos.getY() + 0.5, waypoint.pos.getZ() + 0.5);
 
         src.getPlayer().teleportTo(level, pos.x, pos.y + 0.5, pos.z, Set.of(), 0f, 0f, false);
 
